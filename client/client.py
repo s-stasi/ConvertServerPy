@@ -27,6 +27,10 @@ def mark_file_finished(file_name):
         print(f"Failed to mark file '{file_name}' as finished.")
 
 def process_file(file_name: str):
+    isHecv: bool = False
+    if "hecv" in file_name:
+      isHecv = True
+      
     fileNameParts: list[str] = file_name.split("\\film\\")
     
     if fileNameParts.__len__() == 1:
@@ -38,10 +42,16 @@ def process_file(file_name: str):
       
     if platform.system() == "Windows":
         os_sep = "\\"
-        command = 'ffmpeg -y -i "{}{}" -c:v libx264 -c:a aac -strict experimental "{}{}.mp4"'.format(synoPath.replace('/', os_sep), fileNameParts[1].replace('/', os_sep), synoPath.replace('/', os_sep), fileNameParts[1].split('.')[0].replace('/', os_sep))
+        if isHecv:
+          command = 'ffmpeg -y -i "{}{}" -crf 23 -preset medium -c:v libx264 -c:a aac -b:a 128k "{}{}.mp4"'.format(synoPath.replace('/', os_sep), fileNameParts[1].replace('/', os_sep), synoPath.replace('/', os_sep), fileNameParts[1].split('.')[0].replace('/', os_sep))
+        else:
+          command = 'ffmpeg -y -i "{}{}" -c:v libx264 -c:a aac -strict experimental "{}{}.mp4"'.format(synoPath.replace('/', os_sep), fileNameParts[1].replace('/', os_sep), synoPath.replace('/', os_sep), fileNameParts[1].split('.')[0].replace('/', os_sep))
     else:
         os_sep = "/"
-        command = 'ffmpeg -y -i "{}{}" -c:v libx264 -c:a aac -strict experimental "{}{}.mp4"'.format(synoPath.replace('\\', os_sep), fileNameParts[1].replace('\\', os_sep), synoPath.replace('\\', os_sep), fileNameParts[1].split('.')[0].replace('\\', os_sep))
+        if isHecv:
+          command = 'ffmpeg -y -i "{}{}" -crf 23 -preset medium -c:v libx264 -c:a aac -b:a 128k "{}{}.mp4"'.format(synoPath.replace('\\', os_sep), fileNameParts[1].replace('\\', os_sep), synoPath.replace('\\', os_sep), fileNameParts[1].split('.')[0].replace('\\', os_sep))
+        else: 
+          command = 'ffmpeg -y -i "{}{}" -c:v libx264 -c:a aac -strict experimental "{}{}.mp4"'.format(synoPath.replace('\\', os_sep), fileNameParts[1].replace('\\', os_sep), synoPath.replace('\\', os_sep), fileNameParts[1].split('.')[0].replace('\\', os_sep))
      
      
     print(command)
