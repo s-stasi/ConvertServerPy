@@ -17,7 +17,7 @@ class FilesQueue:
   def __scanVideos__(self) -> None:
     for root, _, files in os.walk(self.synologyPath):
       for file in files:
-        if file.endswith('avi'):
+        if file.endswith('avi') or file.endswith('hecv'):
           self.filesQueue.append(Path(os.path.join(root, file)))
           
   def getElement(self, ip: str) -> str:
